@@ -8,7 +8,9 @@ router.get('/:uuid', async (req, res) => {
         if(!file) {
             return res.render('download', { error: 'Link has been expired.'});
         } 
-        return res.render('download', { uuid: file.uuid, fileName: file.filename, fileSize: file.size, downloadLink: `${process.env.APP_BASE_URL}/files/download/${file.uuid}` });
+        const baseUrl = req.originalUrl.slice(0, req.originalUrl.lastIndexOf('/')); // Get the base URL without the UUID
+        const downloadLink = `${baseUrl}/download/${file.uuid}`; // Append /download to the base URL
+        return res.render('download', { uuid: file.uuid, fileName: file.filename, fileSize: file.size, downloadLink: `${downloadLink}` });
     } catch(err) {
         return res.render('download', { error: 'Something went wrong.'});
     }
